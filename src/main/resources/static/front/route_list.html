@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>黑马旅游-搜索</title>
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" href="css/search.css">
+    <script src="js/jquery-3.3.1.js"></script>
+</head>
+<body>
+<!--引入头部-->
+<div id="header"></div>
+<div class="page_one">
+    <div class="contant">
+        <div class="crumbs">
+            <img src="imagesarch.png" alt="">
+            <p>黑马旅行><span>搜索结果</span></p>
+            <input type="hidden" name="pageNum" id="pageNum">
+        </div>
+        <div class="xinxi clearfix">
+            <div class="left">
+                <div class="header">
+                    <span>商品信息</span>
+                    <span class="jg">价格</span>
+                </div>
+                <ul id="ul1">
+                </ul>
+                <div class="page_num_inf">
+                    <ul id="ul3">
+                    </ul>
+                </div>
+                <div class="pageNum">
+                    <ul id="ul2">
+
+                    </ul>
+                </div>
+            </div>
+            <div class="right">
+                <div class="top">
+                    <div class="hot">HOT</div>
+                    <span>热门推荐</span>
+                </div>
+                <ul>
+                    <li>
+                        <div class="left"><img src="images/04-search_09.jpg" alt=""></div>
+                        <div class="right">
+                            <p>清远新银盏温泉度假村酒店/自由行套...</p>
+                            <p>网付价<span>&yen;<span>899</span>起</span>
+                            </p>
+                        </div>
+                        <>
+                    <li>
+                        <div class="left"><img src="images/04-search_09.jpg" alt=""></div>
+                        <div class="right">
+                            <p>清远新银盏温泉度假村酒店/自由行套...</p>
+                            <p>网付价<span>&yen;<span>899</span>起</span>
+                            </p>
+                        </div>
+                        <>
+                    <li>
+                        <div class="left"><img src="images/04-search_09.jpg" alt=""></div>
+                        <div class="right">
+                            <p>清远新银盏温泉度假村酒店/自由行套...</p>
+                            <p>网付价<span>&yen;<span>899</span>起</span>
+                            </p>
+                        </div>
+                        <>
+                    <li>
+                        <div class="left"><img src="images/04-search_09.jpg" alt=""></div>
+                        <div class="right">
+                            <p>清远新银盏温泉度假村酒店/自由行套...</p>
+                            <p>网付价<span>&yen;<span>899</span>起</span>
+                            </p>
+                        </div>
+                        <>
+                    <li>
+                        <div class="left"><img src="images/04-search_09.jpg" alt=""></div>
+                        <div class="right">
+                            <p>清远新银盏温泉度假村酒店/自由行套...</p>
+                            <p>网付价<span>&yen;<span>899</span>起</span>
+                            </p>
+                        </div>
+                        <>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!--引入头部-->
+    <div id="footer"></div>
+    <!--导入布局js，共享header和footer-->
+    <script type="text/javascript" src="js/include.js"></script>
+
+
+<script>
+
+    $(function () {
+        do_page($("#pageNum").val());
+    })
+
+    function do_page(pageNum) {
+        $("#pageNum").val(pageNum);
+        var pageNum = $("#pageNum").val();
+        var url = window.location.href;
+        var start = url.indexOf("=");
+        var cid = url.substring(start+1,url.length);
+
+        $.post("listlist",
+            {"cid":cid,
+                "pageNum":pageNum},
+            function (data) {
+                if(data.page!=null){
+                    var li = ''
+                    $(data.page.list).each(function () {
+                        li+='<li>'
+                        li+='<div class="img"><img src="'+this.rimage+'" alt=""></div>'
+                        li+='<div class="text1">'
+                        li+='<p style="font-size: 15px;width: 350px;margin-left: 30px">'+this.rname+'</p>'
+                        li+='<br/>'
+                        li+='<p style="font-size: 15px;width: 350px;margin-left: 30px">'+this.routeIntroduce+'</p>'
+                        li+='</div>'
+                        li+='<div class="price">'
+                        li+='<p class="price_num">'
+                        li+='<span>&yen;</span>'
+                        li+='<span>'+this.price+'</span>'
+                        li+='<span>起</span>'
+                        li+='</p>'
+                        li+='<p><a href="route_detail.html?rid='+this.rid+'">查看详情</a></p>'
+                        li+='</div>'
+                        li+='</li>'
+                    })
+
+                    $("#ul1").html(li)
+
+                    var li1 = '';
+                    li1 += '<li><a href="javascript:do_page(1)">首页</a>'
+                    li1 += '<li class="threeword"><a href="javascript:do_page('+(data.page.pageNum-1)+')">上一页</a>'
+                    $(data.page.navigatepageNums).each(function () {
+                        if (data.page.pageNum ==this){
+                            li1 += '<li style="background-color: red"><a href="javascript:do_page('+this+')">'+this+'</a>'
+                        }else {
+                            li1 += '<li><a href="javascript:do_page('+this+')">'+this+'</a>'
+                        }
+
+                    })
+
+                    li1 += '<li class="threeword"><a href="javascript:do_page('+(data.page.pageNum+1)+')">下一页</a>'
+                    li1 += '<li class="threeword"><a href="javascript:do_page('+data.page.pages+')">末页</a>'
+
+                    $("#ul2").html(li1)
+
+                    var li2 = '';
+                    li2+='<span>共</span>'+data.page.pages+'<span></span>页<span>'+data.page.total+'</span>条';
+                    $("#ul3").html(li2)
+
+                }
+
+            })
+
+
+
+    }
+
+</script>
+</body>
+
+</html>
